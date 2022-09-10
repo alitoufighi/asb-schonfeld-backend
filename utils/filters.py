@@ -128,3 +128,76 @@ class SearchFilters:
                 # })
                 search_id += 1
         return tutorials
+
+    def string_query_search_opt(self, query):
+        payload = {
+            "query": {
+                "full_field": {
+                    # "analyze_wildcard": True,
+                    "query": query,
+                    "operator": "and"
+                }
+            },
+            "highlight": {
+                "fields": {field: {} for field in self.priorities.keys()},
+            },
+            "size": 100
+        }
+        # payload = {
+        #     "query": {
+        #         "bool": {
+        #         "should": [
+        #             {
+        #             "wildcard": {
+        #                 "labels": f"*{query}*"
+        #             }
+        #             },
+        #             {
+        #             "wildcard": {
+        #                 "topic": f"*{query}*"
+        #             }
+        #             }
+        #         ]
+        #         }
+        #     }
+        # }
+        # payload = {
+        #     "query": {
+        #         "bool": {
+        #         "must": [
+        #             {
+        #             "query_string": {
+        #                 "analyze_wildcard": True,
+        #                 "query": f"*{query}*",
+        #                 "fields": ["title", "topic"]
+        #             }
+        #             }
+        #         ]
+        #         }
+        #     }
+        # }
+
+        payload = json.dumps(payload)
+        response = requests.request("GET", self.url, headers=self.headers, data=payload)
+        tutorials = []
+        if response.status_code == 200:
+            response  = json.loads(response.text)
+            hits = response["hits"]["hits"]
+            search_id = 1
+            for item in hits:
+                # labels = item["_source"]["labels"]
+                # labels = eval(labels)
+                tutorials.append({
+                    "id": search_id,
+                    **response
+                })
+                # tutorials.append({
+                #     "id": search_id,
+                #     "title": item["_source"]["title"]["input"],
+                #     "topic": item["_source"]["topic"],
+                #     "url": item["_source"]["url"],
+                #     "labels": labels,
+                #     "upvotes": item["_source"]["upvotes"]
+                # })
+                search_id += 1
+        return tutorials
