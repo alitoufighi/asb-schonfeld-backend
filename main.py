@@ -2,25 +2,10 @@
 import uvicorn
 from urllib.parse import unquote_plus
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from utils.filters import SearchFilters
 from utils.elasticsearch import Elasticsearch
 
 app = FastAPI()
-
-origins = [
-    "*"
-]
-
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"]
-# )
-
 
 search = SearchFilters(index="asb.fiu")
 es = Elasticsearch(index="asb.fiu")
@@ -33,7 +18,7 @@ async def autocomplete(query: str = ""):
     else:
         return []
 
-@app.post("/string-query-search")
+@app.post("/search")
 async def string_query_seach(query: str = ""):
     query = unquote_plus(query)
     print(query)

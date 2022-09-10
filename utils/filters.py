@@ -111,6 +111,7 @@ class SearchFilters:
             response  = json.loads(response.text)
             hits = response["hits"]["hits"]
             search_id = 1
+            return response
             for item in hits:
                 # labels = item["_source"]["labels"]
                 # labels = eval(labels)
@@ -179,7 +180,7 @@ class SearchFilters:
 
         payload = json.dumps(payload)
         response = requests.request("GET", self.url, headers=self.headers, data=payload)
-        tutorials = []
+        results = []
         if response.status_code == 200:
             response  = json.loads(response.text)
             hits = response["hits"]["hits"]
@@ -187,11 +188,11 @@ class SearchFilters:
             for item in hits:
                 # labels = item["_source"]["labels"]
                 # labels = eval(labels)
-                tutorials.append({
+                results.append({
                     "id": search_id,
                     **response
                 })
-                # tutorials.append({
+                # results.append({
                 #     "id": search_id,
                 #     "title": item["_source"]["title"]["input"],
                 #     "topic": item["_source"]["topic"],
@@ -200,4 +201,4 @@ class SearchFilters:
                 #     "upvotes": item["_source"]["upvotes"]
                 # })
                 search_id += 1
-        return tutorials
+        return results

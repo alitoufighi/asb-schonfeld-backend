@@ -1,104 +1,3 @@
-<a href="https://search.dineshsonachalam.com">
-    <p align="center">
-    <img src="https://i.imgur.com/j0ZQqwV.png" alt="SearchEngine">
-    </p>
-</a>
-<p align="center">
-    <em>Powered by ElasticSearch, Python, React, Redux, Kubernetes, Cypress E2E, Pytest and Github CI/CD</em>
-</p>
-<p align="center">
-    <a href="https://sonarcloud.io/dashboard?id=tech-courses-search-engine">
-        <img src="https://sonarcloud.io/api/project_badges/quality_gate?project=tech-courses-search-engine"/>
-    </a>
-</p>
-<p  align="center">
-  <a href="https://www.codacy.com/gh/dineshsonachalam/tech-courses-search-engine/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dineshsonachalam/tech-courses-search-engine&amp;utm_campaign=Badge_Grade">
-        <img src="https://app.codacy.com/project/badge/Grade/978c48d5a7ae4b28a1b17df88b6f1d0e"/>
-  </a>
-  <a href="https://github.com/dineshsonachalam/tech-courses-search-engine/actions" alt="CI/CD status">
-      <img src="https://github.com/dineshsonachalam/tech-courses-search-engine/actions/workflows/k8-deploy.yml/badge.svg" />
-  </a>
-  <a href="https://www.python.org/downloads/release/python-390/" alt="Python 3.9">
-      <img src="https://img.shields.io/badge/python-3.9-blue.svg" />
-  </a>
-  <a href="https://hub.docker.com/repository/docker/dineshsonachalam/tech-courses-search-engine-backend" alt="Docker pulls">
-      <img src="https://img.shields.io/docker/pulls/dineshsonachalam/tech-courses-search-engine-backend.svg" />
-  </a>
-</p>
-<p  align="center">
-    
-## Demo
-1. <a href="https://search.dineshsonachalam.com/">Live demo</a>  
-2. <a href="https://vimeo.com/589852893">Video demo</a> 
-
-## What's this project all about?
-
-This project showcases how to build real-time search engines like Google, Coursera, Medium, etc. We focus on the following aspects as part of this project.
-
-- [x] [1. Understanding all significant components in ElasticSearch and its Auto completion feature.](#1-understanding-all-significant-components-in-elasticsearch-and-its-auto-completion-feature)
-- [x] [2. Building an API service that interacts with ElasticSearch to be used by the UI.](#2-building-an-api-service-that-interacts-with-elasticsearch-to-be-used-by-the-ui)
-- [x] [3. Testing API using Pytest.](#3-testing-api-using-pytest)
-- [x] [4. Building UI using React and Redux.](#4-building-ui-using-react-and-redux)
-- [x] [5. Testing UI using Cypress.](#5-testing-ui-using-cypress)
-
-## Application Architecture
-
-<img src="https://user-images.githubusercontent.com/12673979/117518002-c0017c00-afbb-11eb-97f3-14c253cad321.png"/>
-<img src="https://user-images.githubusercontent.com/12673979/117521109-ae26d580-afc9-11eb-8dbd-663eeabaf0ff.png"/>
-
-## 1. Understanding all significant components in ElasticSearch and it's Auto completion feature.
-
-**What is ElasticSearch?**
-
-Free and Open, Distributed, RESTful Search Engine. You can use Elasticsearch to store, search, and manage data for:
-
-- Logs
-- Metrics
-- A search backend
-- Application monitoring
-- Endpoint security
-
-How does Elasticsearch work?
-
-Let's understand some basic components of how it organizes data in ElasticSearch.
-
-**Logical components**
-
-1. Documents:
-
-Documents are the low level unit of information that can be indexed in Elasticsearch expressed in JSON, which is the global internet data interchange format. You can think of a document like a row in a relational database, representing a given entity — the thing you’re searching for. In Elasticsearch, a document can be more than just text, it can be any structured data encoded in JSON. That data can be things like numbers, strings, and dates. Each document has a unique ID and a given data type, which describes what kind of entity the document is. For example, a document can represent an encyclopedia article or log entries from a web server.
-
-2. Indices:
-
-An index is a collection of documents that have similar characteristics. An index is the highest level entity that you can query against in Elasticsearch. You can think of the index as being similar to a database in a relational database schema. Any documents in an index are typically logically related. In the context of an e-commerce website, for example, you can have an index for Customers, one for Products, one for Orders, and so on. An index is identified by a name that is used to refer to the index while performing indexing, search, update, and delete operations against the documents in it.
-
-3. Index templates:
-
-An index template is a way to tell Elasticsearch how to configure an index when it is created. The template is applied automatically whenever a new index is created with the matching pattern.
-
-**Backend components**
-
-1. Cluster:
-
-An Elasticsearch cluster is a group of one or more node instances that are connected together. 
-
-2. Node:
-
-A node is a single server that is a part of a cluster. A node stores data and participates in the cluster’s indexing and search capabilities. An Elasticsearch node can be configured in different ways:
-
-(i) Master Node — Controls the Elasticsearch cluster and is responsible for all cluster-wide operations like creating/deleting an index and adding/removing nodes.
-
-(ii) Data Node — Stores data and executes data-related operations such as search and aggregation.
-
-(iii) Client Node — Forwards cluster requests to the master node and data-related requests to data nodes.
-
-3. Shards:
-
-Elasticsearch provides the ability to subdivide the index into multiple pieces called shards. Each shard is in itself a fully-functional and independent “index” that can be hosted on any node within a cluster. By distributing the documents in an index across multiple shards, and distributing those shards across multiple nodes, Elasticsearch can ensure redundancy, which both protects against hardware failures and increases query capacity as nodes are added to a cluster.
-
-4. Replicas: 
-
-Elasticsearch allows you to make one or more copies of your index’s shards which are called replica shards or just replicas.
 
 **How to implement Autocompletion ElasticSearch feature?**
 
@@ -109,7 +8,7 @@ mkdir -p ES_DATA && docker run -v $(pwd)/ES_DATA:/usr/share/elasticsearch/data -
 
 2. Verify the health status of your cluster.
 ```
-dineshsonachalam@macbook ~ % curl --location --request GET 'http://elasticsearch:9200/_cat/health'
+curl --location --request GET 'http://elasticsearch:9200/_cat/health'
 1629473241 15:27:21 docker-cluster green 1 1 0 0 0 0 0 0 - 100.0%
 ```
 
@@ -117,7 +16,7 @@ dineshsonachalam@macbook ~ % curl --location --request GET 'http://elasticsearch
 ```
 curl -X PUT "elasticsearch:9200/_index_template/template_1?pretty" -H 'Content-Type: application/json' \
 -d'{
-    "index_patterns": "cs.stanford",
+    "index_patterns": "asb.fiu",
     "template": {
         "settings": {
             "number_of_shards": 1
@@ -150,14 +49,14 @@ curl -X PUT "elasticsearch:9200/_index_template/template_1?pretty" -H 'Content-T
 
 4. Validate if the index template is available.
 ```
-dineshsonachalam@macbook ~ % curl --location --request GET 'http://elasticsearch:9200/_index_template/template_1'
+curl --location --request GET 'http://elasticsearch:9200/_index_template/template_1'
 {
     "index_templates": [
         {
             "name": "template_1",
             "index_template": {
                 "index_patterns": [
-                    "cs.stanford"
+                    "asb.fiu"
                 ],
                 "template": {
                     "settings": {
@@ -195,21 +94,21 @@ dineshsonachalam@macbook ~ % curl --location --request GET 'http://elasticsearch
 }
 ```
 
-5. Create a new index called cs.stanford
+5. Create a new index called asb.fiu
 ```
-dineshsonachalam@macbook ~ % curl --location --request PUT 'http://elasticsearch:9200/cs.stanford/'
+curl --location --request PUT 'http://elasticsearch:9200/asb.fiu/'
 {
     "acknowledged": true,
     "shards_acknowledged": true,
-    "index": "cs.stanford"
+    "index": "asb.fiu"
 }
 ```
 
-6. Validate if the cs.stanford index is available.
+6. Validate if the asb.fiu index is available.
 ```
-dineshsonachalam@macbook ~ % curl --location --request GET 'http://elasticsearch:9200/cs.stanford/'
+curl --location --request GET 'http://elasticsearch:9200/asb.fiu/'
 {
-    "cs.stanford": {
+    "asb.fiu": {
         "aliases": {},
         "mappings": {
             "properties": {
@@ -244,7 +143,7 @@ dineshsonachalam@macbook ~ % curl --location --request GET 'http://elasticsearch
                     }
                 },
                 "number_of_shards": "1",
-                "provided_name": "cs.stanford",
+                "provided_name": "asb.fiu",
                 "creation_date": "1629526849180",
                 "number_of_replicas": "1",
                 "uuid": "NrvQ6juOSNmf0GOPO2QADA",
@@ -257,14 +156,14 @@ dineshsonachalam@macbook ~ % curl --location --request GET 'http://elasticsearch
 }
 ```
 
-7. Add documents to cs.stanford index.
+7. Add documents to asb.fiu index.
 ```
-cd backend && python -c 'from utils.elasticsearch import Elasticsearch; es = Elasticsearch("cs.stanford"); es.add_documents()' && cd ..
+python -c 'from utils.elasticsearch import Elasticsearch; es = Elasticsearch("asb.fiu"); es.add_documents()'
 ```
 
-8. Get the total count of the documents in cs.stanford index. We can able to see that the document count is 1350.
+8. Get the total count of the documents in asb.fiu index. We can able to see that the document count is 1350.
 ```
-dineshsonachalam@macbook tech-courses-search-engine % curl --location --request GET 'http://elasticsearch:9200/cs.stanford/_count'
+curl --location --request GET 'http://elasticsearch:9200/asb.fiu/_count'
 {
     "count": 1350,
     "_shards": {
@@ -279,7 +178,7 @@ dineshsonachalam@macbook tech-courses-search-engine % curl --location --request 
 9. Use ElasticSearch suggesters search for autocompletion. The suggest feature suggests similar looking terms based on a provided text by using a suggester.
 
 ```
-dineshsonachalam@macbook tech-courses-search-engine % cd backend && python -c 'from utils.filters import SearchFilters; search = SearchFilters("cs.stanford"); print(search.autocomplete(query="python"))' && cd ..
+dineshsonachalam@macbook tech-courses-search-engine % cd backend && python -c 'from utils.filters import SearchFilters; search = SearchFilters("asb.fiu"); print(search.autocomplete(query="python"))' && cd ..
 [
     {
         "id": 1,
@@ -363,7 +262,7 @@ dineshsonachalam@macbook ~ % curl --location --request GET 'elasticsearch:8000/a
 
 **Sample response**
 ```
-dineshsonachalam@macbook ~ % curl --location --request POST 'elasticsearch:8000/string-query-search?query=python'
+curl --location --request POST 'elasticsearch:8000/string-query-search?query=python'
 [
     {
         "id": 1,
@@ -630,3 +529,162 @@ All your successful assertions will show in Green and failed assertions in Red.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/) © [dineshsonachalam](https://www.github.com/dineshsonachalam)
+
+
+
+
+
+Create Templates
+--
+
+## Template 1
+```bash
+curl -X PUT "http://20.232.249.48:9200/_index_template/template_1?pretty" -H 'Content-Type: application/json' -d'{
+        "index_patterns": "asb.fiu",
+        "template": {
+            "settings": {
+                "number_of_shards": 1
+            },
+            "mappings": {
+                "_source": {
+                    "enabled": true
+                },
+                "properties": {
+                    "full_field": {
+                        "type": "text"
+                    },
+                    "root_symbol": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "bbg": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "symbol": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "ric": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "cusip": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "isin": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "bb_yellow": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "bloomberg": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "spn": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "security_id": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    },
+                    "sedol": {
+                        "type": "text",
+                        "copy_to": "full_field"
+                    }
+                }
+            }
+        }
+    }'
+```
+
+## Template 2
+```bash
+curl -X PUT "20.232.249.48:9200/_index_template/template_1?pretty" -H 'Content-Type: application/json' \
+-d'{
+    "index_patterns": "asbold.fiu",
+    "template": {
+        "settings": {
+            "number_of_shards": 1
+        },
+        "mappings": {
+            "_source": {
+                "enabled": true
+            },
+            "properties": {
+                "root_symbol": {
+                    "type": "text"
+                },
+                "bbg": {
+                    "type": "text"
+                },
+                "symbol": {
+                    "type": "text"
+                },
+                "ric": {
+                    "type": "text"
+                },
+                "cusip": {
+                    "type": "text"
+                },
+                "isin": {
+                    "type": "text"
+                },
+                "bb_yellow": {
+                    "type": "text"
+                },
+                "bloomberg": {
+                    "type": "text"
+                },
+                "spn": {
+                    "type": "text"
+                },
+                "security_id": {
+                    "type": "text"
+                },
+                "sedol": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+}'
+
+kubectl expose pod valid-pod --port=444 --name=frontend
+
+
+Deploy Elasticsearch
+--
+
+```bash
+kubectl apply -f - << EOF
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  http:
+    service: 
+      spec: 
+        type: LoadBalancer
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  version: 8.4.1
+  nodeSets:
+  - name: default
+    count: 1
+    config:
+      node.store.allow_mmap: false
+      xpack.security.authc:
+        anonymous:
+          username: anonymous
+          roles: superuser
+          authz_exception: false
+EOF
+```
