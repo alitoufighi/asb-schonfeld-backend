@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import uvicorn
+from urllib.parse import unquote_plus
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from utils.filters import SearchFilters
@@ -12,17 +13,17 @@ origins = [
 ]
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"]
+# )
 
 
-search = SearchFilters(index="cs.stanford")
-es = Elasticsearch(index="cs.stanford")
+search = SearchFilters(index="asb.fiu")
+es = Elasticsearch(index="asb.fiu")
 
 @app.get("/autocomplete")
 async def autocomplete(query: str = ""):
@@ -34,6 +35,8 @@ async def autocomplete(query: str = ""):
 
 @app.post("/string-query-search")
 async def string_query_seach(query: str = ""):
+    query = unquote_plus(query)
+    print(query)
     if(es.pre_condition_check()):
         result = search.string_query_search(query=query)
         return result

@@ -1,13 +1,13 @@
-FROM python:3.7.11-slim-buster
+FROM dineshsonachalam/tech-courses-search-engine-backend:latest
 
 WORKDIR /app
 
-COPY backend .
+# COPY requirements.txt .
 
-RUN pip install -r requirements.txt
-
+# RUN pip install -r requirements.txt
+COPY . .
 EXPOSE 8000
 
-RUN chmod +x /app/main.py
+# RUN chmod +x /app/main.py
 
 CMD ["python3", "main.py"]

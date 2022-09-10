@@ -87,7 +87,7 @@ class Elasticsearch:
     def add_documents(self):
         total_doc = self.es_record_count()
         if total_doc<=0:
-            tutorials_csv_file_path = "{}/tutorials.csv".format(Path(__file__).parents[1])
+            tutorials_csv_file_path = "{}/street_ids.csv".format(Path(__file__).parents[1])
             # Add documents if there are no records in the index.
             with open(tutorials_csv_file_path) as csv_file:
                 # creating a csv reader object
@@ -98,19 +98,51 @@ class Elasticsearch:
                 # extracting each data row one by one
                 for row in csv_reader:
                     payload={
-                        "topic": row[1],
-                        "title": {
-                            "input": row[2],
-                        },
-                        "url": row[3],
-                        "labels": row[4],
-                        "upvotes": int(row[5])
+                        "security_id": row[0],
+                        "cusip": row[1],
+                        "sedol": row[2],
+                        "isin": row[3],
+                        "ric": row[4],
+                        "bloomberg": row[5],
+                        "bbg": row[6],
+                        "symbol": row[7],
+                        "root_symbol": row[8],
+                        "bb_yellow": row[9],
+                        "spn": row[10],
                     }
                     payload = json.dumps(payload)
                     response = requests.request("POST", self.index_doc_url, headers=self.headers, data=payload)
                     if response.status_code == 200 or response.status_code == 201:
                         response  = json.loads(response.text)
                         print("Indexed document: {}".format(response["_seq_no"]+1))
+
+    # def add_documents(self):
+    #     total_doc = self.es_record_count()
+    #     if total_doc<=0:
+    #         tutorials_csv_file_path = "{}/tutorials.csv".format(Path(__file__).parents[1])
+    #         # Add documents if there are no records in the index.
+    #         with open(tutorials_csv_file_path) as csv_file:
+    #             # creating a csv reader object
+    #             csv_reader = csv.reader(csv_file)
+    #             # extracting field names through first row
+    #             fields = next(csv_reader)
+    #             print(fields)
+    #             # extracting each data row one by one
+    #             for row in csv_reader:
+    #                 payload={
+    #                     "topic": row[1],
+    #                     "title": {
+    #                         "input": row[2],
+    #                     },
+    #                     "url": row[3],
+    #                     "labels": row[4],
+    #                     "upvotes": int(row[5])
+    #                 }
+    #                 payload = json.dumps(payload)
+    #                 response = requests.request("POST", self.index_doc_url, headers=self.headers, data=payload)
+    #                 if response.status_code == 200 or response.status_code == 201:
+    #                     response  = json.loads(response.text)
+    #                     print("Indexed document: {}".format(response["_seq_no"]+1))
 
     def pre_condition_check(self):
         if(self.es_healthcheck()):
