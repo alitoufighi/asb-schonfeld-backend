@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shellhacks-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shellhacks-back
+  template:
+    metadata:
+      labels:
+        app: shellhacks-back
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: shellhacks-back
+        image: ghcr.io/alitoufighi/asb-sh-backend:stable
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 8000
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shellhacks-back
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8000
+  selector:
+    app: shellhacks-back
