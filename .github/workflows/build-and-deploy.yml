@@ -37,13 +37,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBECONFIG_DATA }}
       name: Backend deployment rolling restart to fetch recently build docker image from docker hub.
       with:
-        kubeconfig: ${{ secrets.KUBECONFIG_DATA }}
         args: set image deployment shellhacks-back shellhacks-back=ghcr.io/alitoufighi/asb-sh-backend:${{ github.RUN_ID }}
     
     - uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBECONFIG_DATA }}
       name: Verify deployment for backend app
       with:
-        kubeconfig: ${{ secrets.KUBECONFIG_DATA }}
         args: rollout status deployment/shellhacks-back
