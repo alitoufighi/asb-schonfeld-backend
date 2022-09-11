@@ -270,9 +270,9 @@ curl -X PUT "http://20.232.249.48:9200/_index_template/template_1?pretty" -H 'Co
 ## Template
 
 ```bash
-curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: application/json' \
+curl -X PUT "e:9200/_index_template/template_9?pretty" -H 'Content-Type: application/json' \
 -d'{
-    "index_patterns": "asb.man",
+    "index_patterns": "asb.sunday",
     "template": {
         "settings": {
             "max_ngram_diff": 40,
@@ -311,7 +311,8 @@ curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: applica
                     "search_analyzer": "my_search_analyzer",
                     "fields": {
                         "raw": {
-                            "type": "keyword"
+                            "type": "text",
+                            "analyzer": "my_search_analyzer"
                         }
                     }
                 },
@@ -321,7 +322,8 @@ curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: applica
                     "search_analyzer": "my_search_analyzer",
                     "fields": {
                         "raw": {
-                            "type": "keyword"
+                            "type": "text",
+                            "analyzer": "my_search_analyzer"
                         }
                     }
                 },
@@ -331,7 +333,8 @@ curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: applica
                     "search_analyzer": "my_search_analyzer",
                     "fields": {
                         "raw": {
-                            "type": "keyword"
+                            "type": "text",
+                            "analyzer": "my_search_analyzer"
                         }
                     }
                 },
@@ -341,7 +344,8 @@ curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: applica
                     "search_analyzer": "my_search_analyzer",
                     "fields": {
                         "raw": {
-                            "type": "keyword"
+                            "type": "text",
+                            "analyzer": "my_search_analyzer"
                         }
                     }
                 },
@@ -351,7 +355,8 @@ curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: applica
                     "search_analyzer": "my_search_analyzer",
                     "fields": {
                         "raw": {
-                            "type": "keyword"
+                            "type": "text",
+                            "analyzer": "my_search_analyzer"
                         }
                     }
                 },
@@ -361,7 +366,8 @@ curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: applica
                     "search_analyzer": "my_search_analyzer",
                     "fields": {
                         "raw": {
-                            "type": "keyword"
+                            "type": "text",
+                            "analyzer": "my_search_analyzer"
                         }
                     }
                 }
