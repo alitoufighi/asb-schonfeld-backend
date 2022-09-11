@@ -50,6 +50,7 @@ class Elasticsearch:
             with open(tutorials_csv_file_path) as csv_file:
                 csv_reader = csv.reader(csv_file)
                 fields = next(csv_reader)
+                i=0
                 for row in csv_reader:
                     payload={k: row[i] for i, k in enumerate(fields)}
                     #     "security_id": row[0],
@@ -67,8 +68,10 @@ class Elasticsearch:
                     payload = json.dumps(payload)
                     response = requests.request("POST", self.index_doc_url, headers=self.headers, data=payload)
                     if response.status_code == 200 or response.status_code == 201:
-                        response  = json.loads(response.text)
-                        print("Indexed document: {}".format(response["_seq_no"]+1))
+                        # response  = json.loads(response.text)
+                        i += 1
+                        if(i % 100 == 0):
+                            print("Indexed document: {}".format(i))
 
     def pre_condition_check(self):
         if (self.es_healthcheck()):
