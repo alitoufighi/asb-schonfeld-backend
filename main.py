@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import json
 import os
 import uvicorn
 from urllib.parse import unquote_plus
@@ -25,11 +26,10 @@ async def string_query_seach(query: str = ""):
     return result
 
 @app.post("/updatePriorities")
-async def update_priorities(request: Request):
-    print(request)
-    body = await request.json()
-    print(body)
-    return search.update_priorities(body)
+async def update_priorities(fields: str = "[]"):
+    fields = json.loads(fields)
+    print(fields)
+    return search.update_priorities(fields)
 
 
 if __name__ == "__main__":
