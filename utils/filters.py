@@ -36,17 +36,16 @@ class SearchFilters:
             'security_id': 1,
             'sedol': 0,
         }
-        self.usage = [
-            {k: v*3} for k,v in self.weights.items()
-        ]
+        self.usage = {k: v*3 for k,v in self.weights.items()}
 
     def update_priorities(self, highlighted_fields):
         top_field = max([{'field_name': field, 'usage': self.usage[field]} for field in highlighted_fields], key=lambda x: x['usage'])['field_name']
         self.usage[top_field] += 1
-        if (self.priorities[top_field] == MAX_PRIORITY): return
+        if (self.priorities[top_field] == MAX_PRIORITY): return self.priorities
         next_field_name = list(self.priorities.keys())[list(self.priorities.values()).index(self.priorities[top_field] + 1)]
-        self.priorities[next_field_name] -= 1
-        self.priorities[top_field] += 1
+        if (self.usage[top_field] > self.usage[next_field_name]):
+            self.priorities[next_field_name] -= 1
+            self.priorities[top_field] += 1
         return self.priorities
 
 
