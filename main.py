@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 import uvicorn
 from urllib.parse import unquote_plus
 from fastapi import FastAPI, Request
@@ -7,8 +8,9 @@ from utils.elasticsearch import Elasticsearch
 
 app = FastAPI()
 
-search = SearchFilters(index="asb.fiu")
-es = Elasticsearch(index="asb.fiu")
+es_index = os.getenv('ELASTICSEARCH_INDEX', 'asb.fiu')
+search = SearchFilters(index=es_index)
+es = Elasticsearch(index=es_index)
 
 @app.get("/autocomplete")
 async def autocomplete(query: str = ""):
