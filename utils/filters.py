@@ -22,6 +22,23 @@ class SearchFilters:
             'sedol': 1,
         }
 
+        self.weights = {
+            'root_symbol': 10,
+            'bbg': 9,
+            'symbol': 8,
+            'ric': 7,
+            'cusip': 6,
+            'isin': 5,
+            'bb_yellow': 12,
+            'bloomberg': 3,
+            'spn': 2,
+            'security_id': 1,
+            'sedol': 0,
+        }
+        self.occurrence = [
+            {k: v*3} for k,v in self.weights
+        ]
+
     def autocomplete(self, query):
         payload = {
             "suggest": {
@@ -56,6 +73,50 @@ class SearchFilters:
         return [get_field_priority_string(field) for field in self.priorities.keys()]
 
 
+    def get_weighted_fields_array(self) -> Dict:
+        def get_field_weight_string(field):
+            return {"weight": self.weights[field]}
+        return {field: get_field_weight_string(field) for field in self.weights.keys()}
+
+    def string_query_search_weighted(self, query):
+        payload = {
+            "query": {
+                "query_string": {
+                    "query": query,
+                    "fields": self.get_weighted_fields_array()
+                }
+            },
+            "highlight": {
+                "fields": {field: {} for field in self.weights.keys()},
+            },
+            "size": 100
+        }
+        payload = json.dumps(payload)
+        response = requests.request("GET", self.url, headers=self.headers, data=payload)
+        tutorials = []
+        if response.status_code == 200:
+            response  = json.loads(response.text)
+            hits = response["hits"]["hits"]
+            search_id = 1
+            return response
+            for item in hits:
+                # labels = item["_source"]["labels"]
+                # labels = eval(labels)
+                tutorials.append({
+                    "id": search_id,
+                    **response
+                })
+                # tutorials.append({
+                #     "id": search_id,
+                #     "title": item["_source"]["title"]["input"],
+                #     "topic": item["_source"]["topic"],
+                #     "url": item["_source"]["url"],
+                #     "labels": labels,
+                #     "upvotes": item["_source"]["upvotes"]
+                # })
+                search_id += 1
+        return tutorials
+        
     def string_query_search(self, query):
         payload = {
             "query": {
