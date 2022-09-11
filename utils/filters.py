@@ -39,9 +39,17 @@ class SearchFilters:
         self.usage = {k: v*3 for k,v in self.weights.items()}
 
     def update_priorities(self, highlighted_fields):
-        top_field = max([{'field_name': field, 'usage': self.usage[field]} for field in highlighted_fields], key=lambda x: x['usage'])['field_name']
+        sorted_fields = sorted([{'field_name': field, 'usage': self.usage[field]} for field in highlighted_fields], key=lambda x: x['usage'], reverse=True)
+        if len(sorted_fields) == 0:
+            return
+        top_field = sorted_fields[0]['field_name']
         self.usage[top_field] += 1
-        if (self.priorities[top_field] == MAX_PRIORITY): return self.priorities
+        if (self.priorities[top_field] == MAX_PRIORITY):
+            if len(sorted_fields) > 1 and self.priorities[sorted_fields[1]['field_name']] < MAX_PRIORITY - 1:
+                top_field = sorted_fields[1]['field_name']
+                self.usage[top_field] += 1
+            else:
+                return self.priorities
         next_field_name = list(self.priorities.keys())[list(self.priorities.values()).index(self.priorities[top_field] + 1)]
         if (self.usage[top_field] > self.usage[next_field_name]):
             self.priorities[next_field_name] -= 1
