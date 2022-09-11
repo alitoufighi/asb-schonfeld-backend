@@ -200,7 +200,7 @@ curl --location --request GET 'http://elasticsearch:9200/asb.fiu/_count'
 
 Create Templates
 --
-
+<!-- 
 ## Template 1
 ```bash
 curl -X PUT "http://20.232.249.48:9200/_index_template/template_1?pretty" -H 'Content-Type: application/json' -d'{
@@ -265,61 +265,111 @@ curl -X PUT "http://20.232.249.48:9200/_index_template/template_1?pretty" -H 'Co
             }
         }
     }'
-```
+``` -->
 
-## Template 2
+## Template
+
 ```bash
-curl -X PUT "20.232.249.48:9200/_index_template/template_1?pretty" -H 'Content-Type: application/json' \
+curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: application/json' \
 -d'{
-    "index_patterns": "asbold.fiu",
+    "index_patterns": "asb.man",
     "template": {
         "settings": {
-            "number_of_shards": 1
+            "max_ngram_diff": 40,
+            "analysis": {
+                "search_analyzer": "my_search_analyzer",
+                "analyzer": {
+                    "my_analyzer": {
+                        "type": "custom",
+                        "tokenizer": "ocgram",
+                        "filter": ["lowercase"]
+                    },
+                    "my_search_analyzer": {
+                        "type": "custom",
+                        "tokenizer": "keyword",
+                        "filter": ["lowercase"]
+                    }
+                },
+                "tokenizer": {
+                    "ocgram": {
+                        "type": "ngram",
+                        "min_gram": 2,
+                        "max_gram": 40
+                    }
+                },
+                "number_of_shards": 1
+            }
         },
         "mappings": {
             "_source": {
                 "enabled": true
             },
             "properties": {
-                "root_symbol": {
-                    "type": "text"
+                "f2": {
+                    "type": "text",
+                    "analyzer": "my_analyzer",
+                    "search_analyzer": "my_search_analyzer",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 },
-                "bbg": {
-                    "type": "text"
+                "f3": {
+                    "type": "text",
+                    "analyzer": "my_analyzer",
+                    "search_analyzer": "my_search_analyzer",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 },
-                "symbol": {
-                    "type": "text"
+                "f4": {
+                    "type": "text",
+                    "analyzer": "my_analyzer",
+                    "search_analyzer": "my_search_analyzer",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 },
-                "ric": {
-                    "type": "text"
+                "f5": {
+                    "type": "text",
+                    "analyzer": "my_analyzer",
+                    "search_analyzer": "my_search_analyzer",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 },
-                "cusip": {
-                    "type": "text"
+                "f6": {
+                    "type": "text",
+                    "analyzer": "my_analyzer",
+                    "search_analyzer": "my_search_analyzer",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 },
-                "isin": {
-                    "type": "text"
-                },
-                "bb_yellow": {
-                    "type": "text"
-                },
-                "bloomberg": {
-                    "type": "text"
-                },
-                "spn": {
-                    "type": "text"
-                },
-                "security_id": {
-                    "type": "text"
-                },
-                "sedol": {
-                    "type": "text"
+                "f7": {
+                    "type": "text",
+                    "analyzer": "my_analyzer",
+                    "search_analyzer": "my_search_analyzer",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
                 }
             }
         }
     }
 }'
-
-kubectl expose pod valid-pod --port=444 --name=frontend
+```
 
 
 Deploy Elasticsearch
