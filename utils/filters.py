@@ -221,6 +221,7 @@ class SearchFilters:
         tutorials = []
         if response.status_code == 200:
             response  = json.loads(response.text)
+            print(response)
             hits = response["hits"]["hits"]
             search_id = 1
             return response
