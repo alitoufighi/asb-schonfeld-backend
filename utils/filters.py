@@ -36,7 +36,7 @@ class SearchFilters:
             'sedol': 0,
         }
         self.occurrence = [
-            {k: v*3} for k,v in self.weights
+            {k: v*3} for k,v in self.weights.items()
         ]
 
     def autocomplete(self, query):

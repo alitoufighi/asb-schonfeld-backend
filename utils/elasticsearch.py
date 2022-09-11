@@ -43,34 +43,29 @@ class Elasticsearch:
         total_doc = response["count"]
         return total_doc
 
-    def add_documents(self):
+    def add_documents(self, file_name = 'street_ids.csv'):
         total_doc = self.es_record_count()
         if total_doc<=0:
-            tutorials_csv_file_path = "{}/street_ids.csv".format(Path(__file__).parents[1])
-            # print(tutorials_csv_file_path)
+            tutorials_csv_file_path = "{}/{}".format(Path(__file__).parents[1], file_name)
             with open(tutorials_csv_file_path) as csv_file:
                 csv_reader = csv.reader(csv_file)
                 fields = next(csv_reader)
-                i = 0
                 for row in csv_reader:
-                    payload={
-                        "security_id": row[0],
-                        "cusip": row[1],
-                        "sedol": row[2],
-                        "isin": row[3],
-                        "ric": row[4],
-                        "bloomberg": row[5],
-                        "bbg": row[6],
-                        "symbol": row[7],
-                        "root_symbol": row[8],
-                        "bb_yellow": row[9],
-                        "spn": row[10],
-                    }
+                    payload={k: row[i] for i, k in enumerate(fields)}
+                    #     "security_id": row[0],
+                    #     "cusip": row[1],
+                    #     "sedol": row[2],
+                    #     "isin": row[3],
+                    #     "ric": row[4],
+                    #     "bloomberg": row[5],
+                    #     "bbg": row[6],
+                    #     "symbol": row[7],
+                    #     "root_symbol": row[8],
+                    #     "bb_yellow": row[9],
+                    #     "spn": row[10],
+                    # }
                     payload = json.dumps(payload)
                     response = requests.request("POST", self.index_doc_url, headers=self.headers, data=payload)
-                    i += 1
-                    if (i == 500):
-                        break
                     if response.status_code == 200 or response.status_code == 201:
                         response  = json.loads(response.text)
                         print("Indexed document: {}".format(response["_seq_no"]+1))
