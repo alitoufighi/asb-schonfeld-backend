@@ -1,6 +1,7 @@
 import requests
 import json
 from typing import List, Dict
+MAX_PRIORITY = 11
 
 class SearchFilters:
     def __init__(self, index):
@@ -15,7 +16,7 @@ class SearchFilters:
             'ric': 8,
             'cusip': 7,
             'isin': 6,
-            'bb_yellow': 12,
+            'bb_yellow': 5,
             'bloomberg': 4,
             'spn': 3,
             'security_id': 2,
@@ -29,15 +30,26 @@ class SearchFilters:
             'ric': 7,
             'cusip': 6,
             'isin': 5,
-            'bb_yellow': 12,
+            'bb_yellow': 4,
             'bloomberg': 3,
             'spn': 2,
             'security_id': 1,
             'sedol': 0,
         }
-        self.occurrence = [
+        self.usage = [
             {k: v*3} for k,v in self.weights.items()
         ]
+
+    def update_priorities(self, highlighted_fields):
+        top_field = max([{'field_name': field, 'usage': self.usage[field]} for field in highlighted_fields], key=lambda x: x['usage'])['field_name']
+        self.usage[top_field] += 1
+        if (self.priorities[top_field] == MAX_PRIORITY): return
+        next_field_name = list(self.priorities.keys())[list(self.priorities.values()).index(self.priorities[top_field] + 1)]
+        self.priorities[next_field_name] -= 1
+        self.priorities[top_field] += 1
+        return self.priorities
+
+
 
     def autocomplete(self, query):
         payload = {

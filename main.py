@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import uvicorn
 from urllib.parse import unquote_plus
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from utils.filters import SearchFilters
 from utils.elasticsearch import Elasticsearch
 
@@ -23,8 +23,10 @@ async def string_query_seach(query: str = ""):
     return result
 
 @app.post("/updatePriorities")
-async def update_priorities():
-    return 200
+async def update_priorities(request: Request):
+    body = await request.json()
+    print(body)
+    return search.update_priorities(body)
 
 
 if __name__ == "__main__":
