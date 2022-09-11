@@ -84,6 +84,11 @@ class SearchFilters:
         return [get_field_priority_string(field) for field in self.priorities.keys()]
 
 
+    def get_exact_match_priorities(self) -> List[str]:
+        def get_exact_match_priority(field):
+            return f'{field}.raw^14'
+        return [get_exact_match_priority(field) for field in self.priorities.keys()]
+
     def get_weighted_fields_array(self) -> Dict:
         def get_field_weight_string(field):
             return {"weight": self.weights[field]}
@@ -187,6 +192,24 @@ class SearchFilters:
         
     def string_query_search(self, query):
         payload = {
+            "query": {
+                "bool": {
+                    "should": [
+                        {
+                            "query_string": {
+                                "query": query,
+                                "fields": self.get_exact_match_priorities()
+                            }
+                        },
+                        {
+                            "query_string": {
+                                "query": query,
+                                "fields": self.get_prioritized_fields_array()
+                            }
+                        }
+                    ]
+                }
+            },
             "query": {
                 "query_string": {
                     # "analyze_wildcard": True,
