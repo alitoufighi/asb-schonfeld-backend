@@ -19,7 +19,7 @@ async def autocomplete(query: str = ""):
 async def string_query_seach(query: str = ""):
     query = unquote_plus(query)
     print(query)
-    result = search.string_query_search_weighted(query=query)
+    result = search.weighted_query_with_exact(query=query)
     return result
 
 @app.post("/updatePriorities")
