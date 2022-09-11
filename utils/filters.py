@@ -80,7 +80,7 @@ class SearchFilters:
 
     def get_prioritized_keywords_array(self) -> List[str]:
         def get_field_priority_string(field):
-            return f'{field}.keyword^20'
+            return f'{field}.keyword'
         return [get_field_priority_string(field) for field in self.priorities.keys()]
 
     def weighted_query_with_exact(self, query):
@@ -92,7 +92,7 @@ class SearchFilters:
                         {
                         "query_string": {
                             "query": "*("+query+")*",
-                            "fields": self.get_prioritized_fields_array()
+                            "fields": self.get_prioritized_keywords_array()
                         }
                         },
                         {
