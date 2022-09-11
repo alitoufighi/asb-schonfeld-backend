@@ -192,6 +192,7 @@ class SearchFilters:
         
     def string_query_search(self, query):
         payload = {
+            "explain": True,
             "query": {
                 "bool": {
                     "should": [
@@ -210,52 +211,11 @@ class SearchFilters:
                     ]
                 }
             },
-            "query": {
-                "query_string": {
-                    # "analyze_wildcard": True,
-                    "query": query,
-                    "fields": self.get_prioritized_fields_array()
-                }
-            },
             "highlight": {
                 "fields": {field: {} for field in self.priorities.keys()},
             },
             "size": 100
         }
-        # payload = {
-        #     "query": {
-        #         "bool": {
-        #         "should": [
-        #             {
-        #             "wildcard": {
-        #                 "labels": f"*{query}*"
-        #             }
-        #             },
-        #             {
-        #             "wildcard": {
-        #                 "topic": f"*{query}*"
-        #             }
-        #             }
-        #         ]
-        #         }
-        #     }
-        # }
-        # payload = {
-        #     "query": {
-        #         "bool": {
-        #         "must": [
-        #             {
-        #             "query_string": {
-        #                 "analyze_wildcard": True,
-        #                 "query": f"*{query}*",
-        #                 "fields": ["title", "topic"]
-        #             }
-        #             }
-        #         ]
-        #         }
-        #     }
-        # }
-
         payload = json.dumps(payload)
         response = requests.request("GET", self.url, headers=self.headers, data=payload)
         tutorials = []
