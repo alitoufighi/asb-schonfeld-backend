@@ -26,6 +26,7 @@ async def string_query_seach(query: str = ""):
 
 @app.post("/updatePriorities")
 async def update_priorities(request: Request):
+    print(request)
     body = await request.json()
     print(body)
     return search.update_priorities(body)
