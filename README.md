@@ -371,6 +371,18 @@ curl -X PUT "e:9200/_index_template/template_8?pretty" -H 'Content-Type: applica
 }'
 ```
 
+Reindex
+```bash
+curl -X POST "e:9200/_reindex" -H 'Content-Type: application/json' -d'{
+    "source": {
+        "index": "asb.behzad"
+    },
+    "dest": {
+        "index": "asb.man"
+    }
+}'
+```
+
 
 Deploy Elasticsearch
 --
