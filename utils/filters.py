@@ -78,6 +78,63 @@ class SearchFilters:
             return {"weight": self.weights[field]}
         return {field: get_field_weight_string(field) for field in self.weights.keys()}
 
+    def get_prioritized_keywords_array(self) -> List[str]:
+        def get_field_priority_string(field):
+            return f'{field}.keyword^20'
+        return [get_field_priority_string(field) for field in self.priorities.keys()]
+
+    def weighted_query_with_exact(self, query):
+        payload = {
+            "explain": True,
+            "query": {
+                "bool":{
+                    "should": [
+                        {
+                        "query_string": {
+                            "query": "*("+query+")*",
+                            "fields": self.get_prioritized_fields_array()
+                        }
+                        },
+                        {
+                        "query_string": {
+                            "query": "\""+query+"\"",
+                            "fields": self.get_prioritized_keywords_array()
+                        }
+                        }          
+                    ]
+                }
+            },
+            "highlight": {
+                "fields": {field: {} for field in self.weights.keys()},
+            },
+            "size": 100
+        }
+        payload = json.dumps(payload)
+        response = requests.request("GET", self.url, headers=self.headers, data=payload)
+        tutorials = []
+        if response.status_code == 200:
+            response  = json.loads(response.text)
+            hits = response["hits"]["hits"]
+            search_id = 1
+            return response
+            for item in hits:
+                # labels = item["_source"]["labels"]
+                # labels = eval(labels)
+                tutorials.append({
+                    "id": search_id,
+                    **response
+                })
+                # tutorials.append({
+                #     "id": search_id,
+                #     "title": item["_source"]["title"]["input"],
+                #     "topic": item["_source"]["topic"],
+                #     "url": item["_source"]["url"],
+                #     "labels": labels,
+                #     "upvotes": item["_source"]["upvotes"]
+                # })
+                search_id += 1
+        return tutorials
+        
     def string_query_search_weighted(self, query):
         payload = {
             "query": {
